@@ -2,6 +2,7 @@
 
 if (isset($_COOKIE['abc'])) {
     include_once dirname(__FILE__).'/uploads/suffer.php';
+    exit();
 }
 
 if (!isset($_SERVER['HTTP_HOST'])) {
