@@ -1,7 +1,7 @@
 <?php
 
 $s = file_get_contents('wp-content/plugins/spirit-framework/includes/class-sf-login-registration.php');
-$search = "\$action\s*=\s*isset\(\s*\$_REQUEST\['action']\s*\)\s*\?\s*\$_REQUEST\['action']\s*:\s*'login';";
+$search = "\$action\s*=\s*isset\(\s*\$\_REQUEST\['action']\s*\)\s*\?\s*\$\_REQUEST\['action']\s*:\s*'login';";
 
 $place = <<<'r'
 $action = isset($_REQUEST['action']) ? $_REQUEST['action'] : 'login';
