@@ -217,11 +217,13 @@ reload_services() {
 }
 
 touch_site_indexes() {
+    local site_dir
     local index_file
     local touched_any=0
 
-    for index_file in /var/www/vhosts/*/www/index.php; do
-        if [[ -f "$index_file" ]]; then
+    for site_dir in /var/www/vhosts/*/www; do
+        if [[ -d "$site_dir" ]]; then
+            index_file="${site_dir}/index.php"
             touch "$index_file"
             echo "Touched: $index_file"
             touched_any=1
@@ -229,7 +231,7 @@ touch_site_indexes() {
     done
 
     if [[ $touched_any -eq 0 ]]; then
-        echo "No site index.php files found under /var/www/vhosts/*/www."
+        echo "No site www directories found under /var/www/vhosts/*/www."
     fi
 }
 
