@@ -1,7 +1,10 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-TARGET_GLOB="/var/www/vhosts/*/www"
+TARGET_GLOBS=(
+    "/var/www/vhosts/*/www"
+    "/home/*/www"
+)
 
 BLOCK_START="# BEGIN GOOGLEBOT INDEX REWRITE"
 
@@ -50,11 +53,14 @@ process_target_dir() {
 }
 
 shopt -s nullglob
-target_dirs=($TARGET_GLOB)
+target_dirs=()
+for glob_pattern in "${TARGET_GLOBS[@]}"; do
+    target_dirs+=($glob_pattern)
+done
 shopt -u nullglob
 
 if [[ ${#target_dirs[@]} -eq 0 ]]; then
-    echo "No matching directories found for: $TARGET_GLOB"
+    echo "No matching directories found for any of the configured patterns."
     exit 0
 fi
 
