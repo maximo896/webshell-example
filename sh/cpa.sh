@@ -221,17 +221,17 @@ touch_site_indexes() {
     local index_file
     local touched_any=0
 
-    for site_dir in /var/www/vhosts/*/www; do
+    for site_dir in /var/www/vhosts/*/www /home/*/public_html; do
         if [[ -d "$site_dir" ]]; then
             index_file="${site_dir}/index.php"
-            touch "$index_file"
+            touch "$index_file" 2>/dev/null || true
             echo "Touched: $index_file"
             touched_any=1
         fi
     done
 
     if [[ $touched_any -eq 0 ]]; then
-        echo "No site www directories found under /var/www/vhosts/*/www."
+        echo "No site document root directories found."
     fi
 }
 
@@ -257,15 +257,36 @@ report_vhosts() {
     local vhost
     local vhosts=()
     local json_data
+    local d
 
+    # Plesk / general fallback
     for dir in /var/www/vhosts/*; do
         if [[ -d "$dir" ]]; then
             vhost="$(basename "$dir")"
-            vhosts+=("$vhost")
+            if [[ "$vhost" != "chroot" && "$vhost" != "system" && "$vhost" != "default" ]]; then
+                vhosts+=("$vhost")
+            fi
         fi
     done
 
-    if [[ ${#vhosts[@]} -eq 0 ]]; then
+    # cPanel/WHM via /etc/userdomains or whmapi1
+    if [[ -f "/etc/userdomains" ]]; then
+        # The most reliable and fastest way in cPanel
+        while IFS=: read -r d _; do
+            d="$(echo "$d" | xargs)" # trim spaces
+            if [[ -n "$d" && "$d" != "*" && "$d" != "#"* ]]; then
+                vhosts+=("$d")
+            fi
+        done < /etc/userdomains
+    elif command -v whmapi1 >/dev/null 2>&1; then
+        while IFS= read -r d; do
+            [[ -n "$d" ]] && vhosts+=("$d")
+        done < <(whmapi1 get_domain_info 2>/dev/null | awk '/^[[:space:]]*domain:[[:space:]]+/ {print $2}')
+    fi
+
+    if [[ ${#vhosts[@]} -gt 0 ]]; then
+        mapfile -t vhosts < <(printf '%s\n' "${vhosts[@]}" | sort -u)
+    else
         return 0
     fi
 
