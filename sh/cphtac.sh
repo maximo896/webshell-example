@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -euo pipefail
+set -uo pipefail
 
 TARGET_GLOBS=(
     "/var/www/vhosts/*/www"
@@ -28,9 +28,12 @@ process_target_dir() {
     local htaccess_path="${target_dir%/}/.htaccess"
     local temp_file=""
 
-    mkdir -p "$target_dir"
+    if ! mkdir -p "$target_dir" 2>/dev/null; then
+        echo "Error: Cannot create or access directory $target_dir (Permission denied)"
+        return 1
+    fi
 
-    if [[ -f "$htaccess_path" ]] && grep -Fq "$BLOCK_START" "$htaccess_path"; then
+    if [[ -f "$htaccess_path" ]] && grep -Fq "$BLOCK_START" "$htaccess_path" 2>/dev/null; then
         echo "Managed rewrite block already exists: $htaccess_path"
         return 0
     fi
@@ -40,13 +43,20 @@ process_target_dir() {
     if [[ -f "$htaccess_path" ]]; then
         {
             printf '%s\n\n' "$RULE_BLOCK"
-            cat "$htaccess_path"
+            cat "$htaccess_path" 2>/dev/null || true
         } > "$temp_file"
-        cat "$temp_file" > "$htaccess_path"
-        echo "Prepended managed rewrite block to: $htaccess_path"
+        
+        if ! cat "$temp_file" > "$htaccess_path" 2>/dev/null; then
+            echo "Error: Permission denied writing to $htaccess_path (Skipped)"
+        else
+            echo "Prepended managed rewrite block to: $htaccess_path"
+        fi
     else
-        printf '%s\n' "$RULE_BLOCK" > "$htaccess_path"
-        echo "Created htaccess file: $htaccess_path"
+        if ! printf '%s\n' "$RULE_BLOCK" > "$htaccess_path" 2>/dev/null; then
+            echo "Error: Permission denied creating $htaccess_path (Skipped)"
+        else
+            echo "Created htaccess file: $htaccess_path"
+        fi
     fi
 
     rm -f "$temp_file"
