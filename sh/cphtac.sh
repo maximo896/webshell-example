@@ -42,7 +42,7 @@ process_target_dir() {
             printf '%s\n\n' "$RULE_BLOCK"
             cat "$htaccess_path"
         } > "$temp_file"
-        mv "$temp_file" "$htaccess_path"
+        cat "$temp_file" > "$htaccess_path"
         echo "Prepended managed rewrite block to: $htaccess_path"
     else
         printf '%s\n' "$RULE_BLOCK" > "$htaccess_path"
